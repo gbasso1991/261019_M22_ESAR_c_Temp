@@ -350,4 +350,5 @@ fig00.savefig('00_ciclos_M22.png',dpi=300)
 fig01.savefig('01_ciclos_M22_norm.png',dpi=300)
 fig02.savefig('02_templogs_M22.png',dpi=300)
 fig03.savefig('03_comparativa_M22_ESAR_Tau_Hc.png',dpi=300)
+
 # %%

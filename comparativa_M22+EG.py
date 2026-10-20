@@ -298,7 +298,7 @@ for r in resultados_M22EG:
 rates_M22EG = []
 
 #%% Templogs
-fig02, axs =plt.subplots(1,5,figsize=(20,5),constrained_layout=True,sharey=True,sharex=True)
+fig02, axs =plt.subplots(1,5,figsize=(20,5),constrained_layout=True,sharey=True,sharex=False)
 axs[0].set_ylabel('M (A/m)')
 axs[0].set_title('23 kA/m',loc='left')
 axs[1].set_title('29 kA/m',loc='left')
@@ -312,15 +312,15 @@ for i,r in enumerate(res_M22EG):
     rates_M22EG.append(rate)
     print(i,f'WRate = {rate:.2f} °C/s')
     if '060dA' in r.directorio:
-        axs[0].plot(r.time,r.temperatura,'.-',label=f'{rate:.1f} °C/s')
+        axs[0].plot(r.time,r.temperatura,'.-',label=f'{rate:.2f} °C/s')
     elif '075dA' in r.directorio:
-        axs[1].plot(r.time,r.temperatura,'.-',label=f'{rate:.1f} °C/s')
+        axs[1].plot(r.time,r.temperatura,'.-',label=f'{rate:.2f} °C/s')
     elif '100dA' in r.directorio:
-        axs[2].plot(r.time,r.temperatura,'.-',label=f'{rate:.1f} °C/s')
+        axs[2].plot(r.time,r.temperatura,'.-',label=f'{rate:.2f} °C/s')
     elif '125dA' in r.directorio:
-        axs[3].plot(r.time,r.temperatura,'.-',label=f'{rate:.1f} °C/s')
+        axs[3].plot(r.time,r.temperatura,'.-',label=f'{rate:.2f} °C/s')
     elif '150dA' in r.directorio:
-        axs[4].plot(r.time,r.temperatura,'.-',label=f'{rate:.1f} °C/s')
+        axs[4].plot(r.time,r.temperatura,'.-',label=f'{rate:.2f} °C/s')
 
 axs[0].set_ylabel('T (°C)')
 for a in axs:
@@ -331,57 +331,39 @@ plt.suptitle(f'Templogs {nombre_M22EG} \n300 kHz & [38, 47, 57] kA/m\nC = {conc_
 
 ################################################################################################################################
 
-#%% ploteo comparativo de errorbars de ESAR
-categorias = ['38 kA/m', '47 kA/m', '57 kA/m']
+#%% Ploteo comparativo de errorbars de ESAR, tau y Hc - M22EG
+categorias = ['23 kA/m', '29 kA/m', '38 kA/m', '47 kA/m', '57 kA/m']
 x = np.arange(len(categorias))
 
-fig03, (ax,ax2,ax3) = plt.subplots(1,3,figsize=(12,4),constrained_layout=True)
+fig03, (ax,ax2,ax3) = plt.subplots(1,3,figsize=(15,4),constrained_layout=True)
 
 sep = 0.25
+colores = ['C0','C1','C2','C3','C4']
+grupos = [slice(0,3), slice(3,5), slice(5,8), slice(8,10), slice(10,14)]
+ejes_datos = [(ax,SAR_M22EG), (ax2,tau_M22EG), (ax3,Hc_M22EG)]
 
-for i,s in enumerate(SAR_M22EG[:3]):
-    ax.bar(i*sep-sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C0')
-
-for j,s in enumerate(SAR_M22EG[3:6]):
-    ax.bar(j*sep + 3*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C1')
-
-for j,s in enumerate(SAR_M22EG[6:]):
-    ax.bar(j*sep + 7*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C2')
-
-for i,s in enumerate(tau_M22EG[:3]):
-    ax2.bar(i*sep-sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C0')
-
-for j,s in enumerate(tau_M22EG[3:6]):
-    ax2.bar(j*sep + 3*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C1')
-
-for j,s in enumerate(tau_M22EG[6:]):
-    ax2.bar(j*sep + 7*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C2')
-
-for i,s in enumerate(Hc_M22EG[:3]):
-    ax3.bar(i*sep-sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C0')
-
-for j,s in enumerate(Hc_M22EG[3:6]):
-    ax3.bar(j*sep + 3*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C1')
-
-for j,s in enumerate(Hc_M22EG[6:]):
-    ax3.bar(j*sep + 7*sep, s.n, yerr=s.s, width=0.2, capsize=5, color='C2')
-
+for a,datos in ejes_datos:
+    for i,g in enumerate(grupos):
+        valores = datos[g]
+        n = len(valores)
+        desplazamientos = (np.arange(n)-(n-1)/2)*sep
+        for j,s in enumerate(valores):
+            a.bar(x[i]+desplazamientos[j], s.n, yerr=s.s, width=sep*0.95, capsize=3, color=colores[i])
 
 for a in [ax,ax2,ax3]:
     a.grid(axis='y', alpha=0.3)
     a.set_xticks(x)
     a.set_xticklabels(categorias)
-    
 
 ax.set_title('ESAR',loc='left')
-ax2.set_title('tau',loc='left')
-ax3.set_title('Hc',loc='left')
+ax2.set_title(r'$\tau$',loc='left')
+ax3.set_title('$H_c$',loc='left')
 ax.set_ylabel('ESAR (W/g)')
-ax2.set_ylabel('tau (ns)')
-ax3.set_ylabel('Hc (kA/m)')
-plt.suptitle(f'Parametros {nombre_M22EG} \n300 kHz - [38 , 47, 57] kA/m')
-plt.show()
+ax2.set_ylabel(r'$\tau$ (ns)')
+ax3.set_ylabel('$H_c$ (kA/m)')
 
+fig03.suptitle(f'Parámetros {nombre_M22EG} - 300 kHz')
+plt.show()
 #%% Salvo figuras
 fig00.savefig('00_ciclos_M22EG.png',dpi=300)
 fig01.savefig('01_ciclos_M22EG_norm.png',dpi=300)

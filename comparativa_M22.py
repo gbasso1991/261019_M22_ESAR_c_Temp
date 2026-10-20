@@ -181,8 +181,8 @@ def banda_temperatura(t, T, N=500, kind='linear'):
     return t, T, t_common, Tmin, Tmax, Tmean
 #%% M22
 nombre_M22='M22'
-ciclos_M22 = glob("**/*ciclo_promedio_H_M.txt", recursive=True)
-resultados_M22 = glob("**/*resultados.txt", recursive=True)
+ciclos_M22 = glob("M22/**/*ciclo_promedio_H_M.txt", recursive=True)
+resultados_M22 = glob("M22/**/*resultados.txt", recursive=True)
 ciclos_M22.sort()
 resultados_M22.sort()
 conc_M22 =  25.4 #g/L 

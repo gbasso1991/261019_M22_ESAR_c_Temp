@@ -389,3 +389,6 @@ fig02.savefig('02_templogs_M22EG.png',dpi=300)
 fig03.savefig('03_comparativa_M22EG_ESAR_Tau_Hc.png',dpi=300)
 
 # %%
+
+
+
